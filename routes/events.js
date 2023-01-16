@@ -7,8 +7,14 @@ import {
   createEvent,
   deleteEvent,
   createUserEvents,
+  deleteUserEvent,
+  deleteUserEventsByEventId,
 } from "../models/events.js";
-import { getEventTags, createEventTags } from "../models/events_tags.js";
+import {
+  getEventTags,
+  createEventTags,
+  deleteTagsByEvent,
+} from "../models/events_tags.js";
 import {
   getEventOrganiserById,
   getUserById,
@@ -178,8 +184,10 @@ router.post("/eventTags", async function (req, res) {
   res.json(responseObject);
 });
 
-router.delete("/:id", async function (req, res) {
-  let data = await deleteEvent(req.params.id);
+/* _______________________________________DELETE REQUESTS_________________________________________*/
+
+router.delete("/deluserev", async function (req, res) {
+  let data = await deleteUserEvent(req.body);
   const responseObject = {
     success: true,
     message: "Event deleted",
@@ -189,6 +197,38 @@ router.delete("/:id", async function (req, res) {
   res.json(responseObject);
 });
 
+router.delete("/delev", async function (req, res) {
+  let data = await deleteEvent(req.body.eventid);
+  const responseObject = {
+    success: true,
+    message: "Event deleted",
+    payload: data,
+  };
+  //console.log(responseObject);
+  res.json(responseObject);
+});
+
+router.delete("/deltags", async function (req, res) {
+  let data = await deleteTagsByEvent(req.body.eventid);
+  const responseObject = {
+    success: true,
+    message: "Event deleted",
+    payload: data,
+  };
+  //console.log(responseObject);
+  res.json(responseObject);
+});
+
+router.delete("/delusev", async function (req, res) {
+  let data = await deleteUserEventsByEventId(req.body.eventid);
+  const responseObject = {
+    success: true,
+    message: "UserEvents deleted",
+    payload: data,
+  };
+  //console.log(responseObject);
+  res.json(responseObject);
+});
 router.patch("/:id", async function (req, res) {
   let newEventDescription = req.body.eventDescription;
   let data = await editEvent(req.params.id, newEventDescription);
